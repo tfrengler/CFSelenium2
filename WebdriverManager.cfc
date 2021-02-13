@@ -99,6 +99,7 @@
         };
 
         ServiceBuilder.usingDriverExecutable(DriverExecutable);
+
         if (arguments.port > 0)
             ServiceBuilder.usingPort(arguments.port);
         else

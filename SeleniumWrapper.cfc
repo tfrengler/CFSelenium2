@@ -32,18 +32,15 @@
         }
 
         var RemoteURL = arguments.remoteURL;
-        dump(RemoteURL.toString());
-
         var CreateWebdriverTask = runAsync(() => {
-                return this.ObjectFactory.Get("org.openqa.selenium.remote.RemoteWebDriver").init(RemoteURL, Options);
+            return this.ObjectFactory.Get("org.openqa.selenium.remote.RemoteWebDriver").init(RemoteURL, Options);
 
-        }, 5000).then((any remoteWebDriver)=> {
+        }, 10000).then((any remoteWebDriver)=> {
             this.Webdriver = arguments.remoteWebDriver;
 
-        }).error((any error)=> throw(arguments.error));
-        
-        // throw(message="Error instantiating SeleniumWrapper", detail="Timed out creating session. RemoteURL is not reachable or something else is wrong (#RemoteURL#)"));
-        
+        }).error((any error) => Dispose());
+        // "Webdriver is running, but can't interact with the browser for some reason so it ends up in an endless wait. Even if you kill the webdriver you'll still end up with hanging browser-processes.. fun"
+                
         if (!createObject("java", "java.net.InetAddress").getByName(arguments.remoteURL.getHost()).isLoopbackAddress())
             this.Webdriver.setFileDetector(this.ObjectFactory.Get("org.openqa.selenium.remote.LocalFileDetector").init());
 
