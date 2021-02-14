@@ -5,7 +5,7 @@
     <cfset variables.IS_WINDOWS = (find("win", variables.OS) GT 0) />
     <cfset variables.IS_MAC = (find("mac", variables.OS) GT 0) />
     <cfset variables.IS_UNIX = (find("nix", variables.OS) GT 0 OR find("nux", variables.OS) GT 0 OR find("aix", variables.OS) GT 0) />
-    
+
     <cfset variables.ValidBrowsers = ["CHROME","EDGE","FIREFOX","IE11"] />
     <cfset variables.DriverNames = {
         EDGE: "msedgedriver",
@@ -39,7 +39,7 @@
         </cfscript>
     </cffunction>
 
-    <cffunction name="Start" output="true" access="public" returntype="any" hint="Starts the webdriver for a given browser, and returns the URL it's running on in the form of an instance of 'java.net.URL'" >
+    <cffunction name="Start" access="public" returntype="any" hint="Starts the webdriver for a given browser, and returns the URL it's running on in the form of an instance of 'java.net.URL'" >
         <cfargument name="browser" type="string" required="true" hint="The name of the browser whose webdriver you wish to start" />
         <cfargument name="killExisting" type="boolean" required="false" default="false" hint="If passed as true it will shut down any already running webdrivers. If passed as false (which is the default) and the webdriver is already running, an exception will be thrown" />
         <cfargument name="port" type="numeric" required="false" default="0" hint="The port to start the webdriver on. By default, the webdriver will start on a random, free port on the system" />
@@ -85,7 +85,7 @@
                 ServiceBuilder = variables.ObjectFactory.Get("org.openqa.selenium.chrome.ChromeDriverService$Builder").init();
                 break;
             case "FIREFOX":
-                ServiceBuilder = variables.ObjectFactory.Get("org.openqa.selenium.firefox.FirefoxDriverService$Builder").init();
+                ServiceBuilder = variables.ObjectFactory.Get("org.openqa.selenium.firefox.GeckoDriverService$Builder").init();
                 break;
             case "EDGE":
                 ServiceBuilder = variables.ObjectFactory.Get("org.openqa.selenium.edge.EdgeDriverService$Builder").init();
@@ -134,7 +134,7 @@
         return true;
         </cfscript>
     </cffunction>
-    
+
     <cffunction name="IsRunning" access="public" returntype="boolean" hint="Check whether the given webdriver is running or not" >
         <cfargument name="browser" type="string" required="true" hint="The name of the browser whose status you want to check" />
         <cfscript>
