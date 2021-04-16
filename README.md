@@ -25,8 +25,8 @@ My name is Thomas and I'm a fairly experienced automation tester who has created
 
 ## Compatibility/requirements
 
-1. Selenium **v3.141** (https://selenium-release.storage.googleapis.com/index.html?path=3.141/)
-1. **Lucee 5.3** or **Adobe Coldfusion 2018**
+1. Selenium **v3.141** (https://selenium-release.storage.googleapis.com/index.html?path=3.141/) IMPORTANT: download **selenium-java-3.141.0.zip**, and not any of the server-files!
+2. **Lucee 5.3** or **Adobe Coldfusion 2018**
 
 ## Installation
 
