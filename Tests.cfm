@@ -1,16 +1,23 @@
 <!--- Disable proxy buffering, which allows us to use cfflush --->
 <cfheader name="X-Accel-Buffering" value="no" />
-<cfset ObjectFactory = new JavaObjectFactory(jarFolder="C:\Temp\selenium-java-3.141.59\") />
+
+<cfset SeleniumJars = directoryList(path="C:\Temp\selenium-java-3.141.59\", filter="*.jar", type="file") />
+<cfset Javaloader = new JavaLoaderLib.javaloader.JavaLoader(SeleniumJars) />
+
+<cfset ObjectFactory = new JavaObjectFactory(javaloaderInstance=JavaLoader) />
+<!--- <cfset ObjectFactory = new JavaObjectFactory(jarFolder="C:\Temp\selenium-java-3.141.59\") /> --->
+
 <cfset By = ObjectFactory.Get("org.openqa.selenium.By") />
 
-<cfset ChromeTest = false />
+<cfset ChromeTest = true />
 <cfset FirefoxTest = true />
 
 <cftry>
 
+    <!--- Testing redirecting the webdriver log to a file --->
     <!--- <cfscript>
+
         OutputFile = createObject("java", "java.io.File").init("C:\Temp\log.txt");
-        // OutputStream = createObject("java", "java.io.FileWriter").init(OutputFile);
         Executable = createObject("java", "java.io.File").init("C:\Temp\Webdrivers\chromedriver.exe");
         ServiceBuilder = ObjectFactory.Get("org.openqa.selenium.chrome.ChromeDriverService$Builder").init();
         ServiceBuilder.usingDriverExecutable(Executable);
@@ -71,7 +78,6 @@
             <cfdump var="Error, Webdrivers reports FIREFOX is was stopped but it should not have been" />
         </cfif>
 
-        <cfset Selenium.Dispose() />
         <cfdump var="CHROME tests done" />
         <hr/>
     </cfif>
@@ -123,11 +129,12 @@
         <cfdump var="FIREFOX tests done" />
     </cfif>
 <cfcatch>
-    <!--- <cfset Service.Stop() /> --->
     <cfset Webdrivers.Dispose() />
     <cfrethrow/>
 </cfcatch>
 </cftry>
 
-<!--- <cfset Service.Stop() /> --->
+<hr/>
+<cfdump var="Disposing the WebdriverManager-instance" />
 <cfset Webdrivers.Dispose() />
+<cfdump var="All done! Check running processes to see if there are any lingering 'chromedriver' or 'geckodriver' instances around (there shouldn't be...)" />

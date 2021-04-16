@@ -5,6 +5,7 @@
     <cfset variables.IS_WINDOWS = (find("win", variables.OS) GT 0) />
     <cfset variables.IS_MAC = (find("mac", variables.OS) GT 0) />
     <cfset variables.IS_UNIX = (find("nix", variables.OS) GT 0 OR find("nux", variables.OS) GT 0 OR find("aix", variables.OS) GT 0) />
+    <cfset variables.IsDisposed = false />
 
     <cfset variables.ValidBrowsers = ["CHROME","EDGE","FIREFOX","IE11"] />
     <cfset variables.DriverNames = {
@@ -155,10 +156,11 @@
 
     <cffunction name="Dispose" access="public" returntype="void" hint="Disposes of this WebdriverManager-instance, releasing all held resources by shutting down all open webdrivers" >
         <cfscript>
+            if (variables.IsDisposed) return;
+            variables.IsDisposed = true;
 
             for(var BrowserName in variables.DriverServices)
                 Stop(BrowserName);
-
         </cfscript>
     </cffunction>
 </cfcomponent>
