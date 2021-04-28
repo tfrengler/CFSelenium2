@@ -16,14 +16,14 @@
     } />
 
     <cfset variables.DriverServices = {
-        CHROME: null,
-        EDGE: null,
-        FIREFOX: null,
-        IE11: null
+        CHROME: 0,
+        EDGE: 0,
+        FIREFOX: 0,
+        IE11: 0
     } />
 
-    <cfset variables.DriverFolder = null />
-    <cfset variables.ObjectFactory = null />
+    <cfset variables.DriverFolder = 0 />
+    <cfset variables.ObjectFactory = 0 />
     <cfset variables.IsValidBrowser = function(required string name) { return arrayFind(variables.ValidBrowsers, arguments.name) == 0 } />
 
     <cffunction name="init" access="public" returntype="WebdriverManager" hint="Constructor" >
@@ -66,13 +66,13 @@
 
         var Service = DriverServices[arguments.browser];
 
-        if (!arguments.killExisting && !isNull(Service))
+        if (!arguments.killExisting && Service != 0)
         {
             Dispose();
             throw(message="Unable start #arguments.browser#-driver", detail="It appears to already be running (and argument 'killExisting' is false)");
         }
 
-        if (arguments.killExisting && !isNull(Service))
+        if (arguments.killExisting && Service != 0)
             Stop(browser);
 
         var DriverExecutable = createObject("java", "java.io.File").init("#variables.DriverFolder#/#DriverName#");
@@ -126,11 +126,11 @@
         }
 
         var Service = DriverServices[arguments.browser];
-        if (isNull(Service))
+        if (Service == 0)
             return false;
 
         Service.stop();
-        DriverServices[arguments.browser] = null;
+        DriverServices[arguments.browser] = 0;
 
         return true;
         </cfscript>
@@ -147,7 +147,7 @@
         }
 
         var Service = DriverServices[arguments.browser];
-        if (isNull(Service))
+        if (Service == 0)
             return false;
 
         return Service.isRunning();
