@@ -86,7 +86,7 @@ There are a few things to keep in mind:
 - You can download and keep webdriver binaries per platform but not per architecture. This is mostly to keep handling the files internally for starting and stopping the driverservice simple and stable
 
 ```coldfusion
-<cffunction access="public" name="GetLatestWebdriverBinary" returntype="string" output="false" hint="Downloads the latest webdriver binary for a given browser and platform if it's newer than the current version (or there is no current version)" >
+    <cffunction access="public" name="GetLatestWebdriverBinary" returntype="string" output="false" hint="Downloads the latest webdriver binary for a given browser and platform if it's newer than the current version (or there is no current version). Returns a string with a text message indicating whether the driver was updated or not." >
         <cfargument name="browser" type="string" required="true" hint="Valid options are: CHROME, FIREFOX or EDGE" />
         <cfargument name="platform" type="string" required="true" hint="Valid options are: WINDOWS or LINUX" />
         <cfargument name="architecture" type="string" required="true" hint="Valid options are: x86 or x64" />
