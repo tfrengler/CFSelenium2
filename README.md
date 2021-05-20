@@ -77,6 +77,22 @@ Since I guess that most people's basic usage is running the browser and webdrive
 <cfset Webdrivers.Stop("CHROME") />
 ```
 
+## Webdriver binary download tool
+
+Recently I added functionality that allows the framework to download latest webdriver binaries for you. The main method for doing so is called **GetLatestWebdriverBinary**, and allows you to chose the browser, platform and architecture you want to download for. There's another method called **DetermineLatestAvailableVersion** you can use to get latest version as a string to do with as you please, as well as **GetCurrentVersion** which does exactly what it says.
+
+There are a few things to keep in mind:
+- The current version of the webdriver binary is stored in a text-file in the webdriver folder, called **BROWSER_PLATFORM_version.txt**
+- You can download and keep webdriver binaries per platform but not per architecture. This is mostly to keep handling the files internally for starting and stopping the driverservice simple and stable
+
+```coldfusion
+<cffunction access="public" name="GetLatestWebdriverBinary" returntype="string" output="false" hint="Downloads the latest webdriver binary for a given browser and platform if it's newer than the current version (or there is no current version)" >
+        <cfargument name="browser" type="string" required="true" hint="Valid options are: CHROME, FIREFOX or EDGE" />
+        <cfargument name="platform" type="string" required="true" hint="Valid options are: WINDOWS or LINUX" />
+        <cfargument name="architecture" type="string" required="true" hint="Valid options are: x86 or x64" />
+</cffunction>
+```
+
 ## Technical overview (classes, public methods, properties etc)
 
 It's worth noting that Edge is the legacy version (https://support.microsoft.com/en-us/microsoft-edge/what-is-microsoft-edge-legacy-3e779e55-4c55-08e6-ecc8-2333768c0fb0). Selenium v3 does not offer support for the new edge version, as far as I know anyway.
