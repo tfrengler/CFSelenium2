@@ -2,38 +2,21 @@
 <cfheader name="X-Accel-Buffering" value="no" />
 
 <cfset SeleniumJars = directoryList(path="C:\Temp\selenium-java-3.141.59\", filter="*.jar", type="file") />
-<cfset Javaloader = new JavaLoaderLib.javaloader.JavaLoader(SeleniumJars) />
 
-<cfset ObjectFactory = new JavaObjectFactory(javaloaderInstance=JavaLoader) />
-<!--- <cfset ObjectFactory = new JavaObjectFactory(jarFolder="C:\Temp\selenium-java-3.141.59\") /> --->
+<!--- <cfset Javaloader = new JavaLoaderLib.javaloader.JavaLoader(SeleniumJars) /> --->
+<!--- <cfset ObjectFactory = new JavaObjectFactory(javaloaderInstance=JavaLoader) /> --->
 
+<cfset ObjectFactory = new JavaObjectFactory(jarFolder="C:\Temp\selenium-java-3.141.59\") />
 <cfset By = ObjectFactory.Get("org.openqa.selenium.By") />
 
 <cfset ChromeTest = true />
 <cfset FirefoxTest = true />
 
 <cftry>
-
-    <!--- Testing redirecting the webdriver log to a file --->
-    <!--- <cfscript>
-
-        OutputFile = createObject("java", "java.io.File").init("C:\Temp\log.txt");
-        Executable = createObject("java", "java.io.File").init("C:\Temp\Webdrivers\chromedriver.exe");
-        ServiceBuilder = ObjectFactory.Get("org.openqa.selenium.chrome.ChromeDriverService$Builder").init();
-        ServiceBuilder.usingDriverExecutable(Executable);
-        ServiceBuilder.usingAnyFreePort();
-        ServiceBuilder.withLogFile(OutputFile);
-        Service = ServiceBuilder.Build();
-        Service.Start();
-        dump("service started");
-        cfflush();
-
-        Selenium = new SeleniumWrapper(ObjectFactory, Service.getUrl(), "CHROME");
-        dump("browser started");
-        cfflush();
-    </cfscript> --->
-
     <cfset Webdrivers = new WebdriverManager(ObjectFactory, "C:\Temp\Webdrivers\") />
+
+    <cfdump var=#Webdrivers.GetLatestWebdriverBinary("CHROME", "WINDOWS", "x86")# />
+    <cfdump var=#Webdrivers.GetLatestWebdriverBinary("FIREFOX", "WINDOWS", "x64")# />
 
     <!--- CHROME --->
     <cfif ChromeTest >
@@ -129,7 +112,10 @@
         <cfdump var="FIREFOX tests done" />
     </cfif>
 <cfcatch>
-    <cfset Webdrivers.Dispose() />
+    <cfif isDefined("Webdriver")>
+        <cfset Webdrivers.Dispose() />
+    </cfif>
+
     <cfrethrow/>
 </cfcatch>
 </cftry>
