@@ -32,7 +32,8 @@ My name is Thomas and I'm a fairly experienced automation tester who has created
 
 Things you need to download/install:
 1. Selenium's Java bindings: download the zip (see link above). How you make these available to Lucee/ACF is _your_ responsibility (and there are multiple options). This is where the **JavaObjectFactory** comes in. More about that later.
-1. The webdrivers you want: these are maintained by the various browser vendors (except the IE-driver, which is maintained by Selenium). Download these, extract them to a shared folder somewhere where they are readable (and executable, on Linux)
+2. NOTE: The zip-file contains 2 jar-files and a sub-folder called **libs**. It's advised to take all the jar-files (except -sources.jar) and put them into a single folder (so no jars in subfolders). Otherwise - depending on how you load the jars of course - you may get issues with Coldfusion not being able to find and instantiate certain classes or call certain methods.
+3. The webdrivers you want: these are maintained by the various browser vendors (except the IE-driver, which is maintained by Selenium). Download these, extract them to a shared folder somewhere where they are readable (and executable, on Linux). NOTE: You can also use the framework to manage the webdriver files for you. See the section **Webdriver binary download tool** further down.
 
 ## Getting started
 
@@ -79,11 +80,17 @@ Since I guess that most people's basic usage is running the browser and webdrive
 
 ## Webdriver binary download tool
 
-Recently I added functionality that allows the framework to download latest webdriver binaries for you. The main method for doing so is called **GetLatestWebdriverBinary**, and allows you to chose the browser, platform and architecture you want to download for. There's another method called **DetermineLatestAvailableVersion** you can use to get latest version as a string to do with as you please, as well as **GetCurrentVersion** which does exactly what it says.
+Recently I added functionality that allows the framework to download latest webdriver binaries for you. The main method for doing so is called **GetLatestWebdriverBinary**, and allows you to chose the browser, platform and architecture you want to download for. This method will check if your current version (works even if you have no webdrivers downloaded yet) is lower than the latest available then downloads, and extracts it for you. You could chose to call this method each time before you start a test run for example, to ensure you always have the newest version.
 
-There are a few things to keep in mind:
-- The current version of the webdriver binary is stored in a text-file in the webdriver folder, called **BROWSER_PLATFORM_version.txt**
-- You can download and keep webdriver binaries per platform but not per architecture. This is mostly to keep handling the files internally for starting and stopping the driverservice simple and stable
+There's another method called **DetermineLatestAvailableVersion** you can use to get latest version as a string to do with as you please, as well as **GetCurrentVersion** which does exactly what it says. Together you could use these to determine yourself whether you need to update, even displaying it on a webpage somewhere.
+
+Whichever option you chose you will ALWAYS incur at least one HTTP call to determine the latest version. The call to get the version times out after 10 seconds, and the call to download the binary times out after 30.
+
+The current version of the webdriver binary is stored in a text-file in the webdriver folder, called **BROWSER_PLATFORM_version.txt**. If this file is not present the current version is considered to be 0 which will cause the newest binary to be downloaded.
+
+You can download and keep webdriver binaries per platform but not per architecture. This is mostly to keep the handling of the files internally for starting and stopping the DriverService simple and stable.
+
+IE11 is not supported mostly because this version follows Selenium's (since the Selenium project makes and maintains the IEDriver) so it's not gonna change often anyway and wasn't worth the trouble implementing.
 
 ```coldfusion
     <cffunction access="public" name="GetLatestWebdriverBinary" returntype="string" output="false" hint="Downloads the latest webdriver binary for a given browser and platform if it's newer than the current version (or there is no current version). Returns a string with a text message indicating whether the driver was updated or not." >
@@ -95,9 +102,7 @@ There are a few things to keep in mind:
 
 ## Technical overview (classes, public methods, properties etc)
 
-It's worth noting that Edge is the legacy version (https://support.microsoft.com/en-us/microsoft-edge/what-is-microsoft-edge-legacy-3e779e55-4c55-08e6-ecc8-2333768c0fb0). Selenium v3 does not offer support for the new edge version, as far as I know anyway.
-
-Also worth noting is that IE is quirky and can be hard to get to cooperate. And it requires more work than simply starting the driver and interfacing with it via Selenium: https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration
+It's worth noting that IE is quirky and can be hard to get to cooperate. And it requires more work than simply starting the driver and interfacing with it via Selenium: https://github.com/SeleniumHQ/selenium/wiki/InternetExplorerDriver#required-configuration
 
 ---
 
