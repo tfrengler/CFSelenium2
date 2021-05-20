@@ -342,7 +342,7 @@
             var DownloadedPathAndFile = getTempDirectory() & DownloadedFileName;
             var VersionFileName = GetVersionFileName(arguments.browser, arguments.platform);
             var WebdriverFileName = DriverNames[arguments.browser];
-            var HTTPService = new http(url=#arguments.url#, method="GET", timeout="10", redirect="true");
+            var HTTPService = new http(url=#arguments.url#, method="GET", timeout="30", redirect="true");
             var DownloadReponse = HTTPService.send().getPrefix();
 
             if (DownloadReponse.status_code != 200)
