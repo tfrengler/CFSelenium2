@@ -19,7 +19,7 @@
             throw(message="Error instantiating SeleniumWrapper", detail="Argument 'remoteURL' should be an instance of 'java.net.URL' but it isn't");
 
         this.ObjectFactory = arguments.objectFactory;
-        var Options = null;
+        var Options = 0;
 
 		if (structKeyExists(arguments, "driverOptions"))
             Options = arguments.driverOptions;
@@ -31,25 +31,9 @@
             Options = CreateDriverOptions(arguments.browser, arguments.browserArguments);
         }
 
-        var RemoteURL = arguments.remoteURL;
-        var CreateWebdriverTask = runAsync(() => {
-            return this.ObjectFactory.Get("org.openqa.selenium.remote.RemoteWebDriver").init(RemoteURL, Options);
-            // Sometimes this fails in a spectacularly weird way: the webdriver is running, but can't interact with the browser for some reason
-            // It ends up in an endless wait, and will seemingly never time out (until the CFML page itself times out)
-            // Even if you kill the webdriver-executable you'll likely still end up with hanging browser-processes that use up CPU... it's very funky
-        }).then((any remoteWebDriver)=> {
-            this.Webdriver = arguments.remoteWebDriver;
-            return "OK";
-        }).error((any error) => return "NOK");
+        this.Webdriver = this.ObjectFactory.Get("org.openqa.selenium.remote.RemoteWebDriver").init(arguments.remoteURL, Options);
 
-        // Wait 10 seconds for the browser to start and connect with the webdriver
-        if (CreateWebdriverTask.Get(10000) == "NOK")
-        {
-            CreateWebdriverTask.Cancel();
-            Dispose();
-            throw(message="Error instantiating SeleniumWrapper", detail="Timed out instantiating RemoteWebDriver for some reason. Check running processes for hanging driver- and browser-threads");
-        }
-
+        // If we are NOT on localhost then create a LocalFileDetector and add to the webdriver. Otherwise you can't upload files
         if (!createObject("java", "java.net.InetAddress").getByName(arguments.remoteURL.getHost()).isLoopbackAddress())
             this.Webdriver.setFileDetector(this.ObjectFactory.Get("org.openqa.selenium.remote.LocalFileDetector").init());
 
