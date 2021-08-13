@@ -19,6 +19,9 @@ My name is Thomas and I'm a fairly experienced automation tester who has created
 - Supports both local and remote webdriver usage. Both of these "modes" are achieved purely via the RemoteWebDriver-class. I specially chose not to use the local browser-driver classes to keep things simple.
 - Offers support for Chrome, Firefox, Edge and IE. Anything else and you'll have to write your own implementation, sorry.
 
+**Known issues**
+Firefox on Linux may throw an error related to profiles (cannot be loaded or is inaccessible). It seems to have something to do with the profile.ini file being in the snap/mozilla/... folder but selenium tries to find it in the local/bin or usr/bin folders. I haven't been able to find a fix for this yet.
+
 **Disclaimers**
 - Constructive feedback is always welcome, though keep in mind this library was written by me, primarily for use by me, and thus it adheres very much to my principles of software architecture.
 - This library is provided "as is". I have no roadmap for future features, and bugs will only be fixed when or if I have time for it.
@@ -189,4 +192,3 @@ _NOTE:_ Don't rename the executables! This library, as well as the internal **Dr
 
 Not a guaranteed list, just things I'd like to do one day:
 - Port the tools, extensions and locators from my C# Selenium library. Should not be too difficult to pull off, just need the time...
-- Expand WebdriverManager with the option to automatically download the newest version of the webdrivers (much more work, perhaps some day)
