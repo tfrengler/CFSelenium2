@@ -360,8 +360,8 @@
             if (arguments.browser == "FIREFOX" && arguments.platform == "LINUX")
             {
                 var ExtractedTarFileName = DownloadedFileName.replace(".gz", "");
-                if (!ExtractTarGz(DownloadReponse.fileContent, ExtractedTarFileName)) return false;
-                if (!ExtractTar(ExtractedTarFileName)) return false;
+                ExtractTarGz(DownloadReponse.fileContent, ExtractedTarFileName);
+                ExtractTar(ExtractedTarFileName);
 
                 // Re-assigning the variable since we don't download the original file to disk
                 // This is now the extracted tar-file, and not the tar.gz one
