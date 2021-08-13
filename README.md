@@ -20,6 +20,7 @@ My name is Thomas and I'm a fairly experienced automation tester who has created
 - Offers support for Chrome, Firefox, Edge and IE. Anything else and you'll have to write your own implementation, sorry.
 
 **Known issues**
+
 Firefox on Linux may throw an error related to profiles (cannot be loaded or is inaccessible). It seems to have something to do with the profile.ini file being in the snap/mozilla/... folder but selenium tries to find it in the local/bin or usr/bin folders. I haven't been able to find a fix for this yet.
 
 **Disclaimers**
